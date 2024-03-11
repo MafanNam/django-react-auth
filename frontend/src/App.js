@@ -1,12 +1,12 @@
 import React from 'react';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import Layout from "./hocs/Layout";
-import Home from "./containers/Home";
-import Activate from "./containers/Activate";
-import ResetPasswordConfirm from "./containers/ResetPasswordConfirm";
-import ResetPassword from "./containers/ResetPassword";
-import Signup from "./containers/Signup";
-import Login from "./containers/Login";
+import Layout from "./ui/Layout";
+import Home from "./pages/Home";
+import Activate from "./pages/Activate";
+import ResetPasswordConfirm from "./pages/ResetPasswordConfirm";
+import ResetPassword from "./pages/ResetPassword";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
 
 function App() {
     return (

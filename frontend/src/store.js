@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import rootReducer from './reducers';
+import authReducer from './features/user/authSlice'
 
 const initialState = {};
 
 const store = configureStore({
-  reducer: rootReducer,
+  reducer: {
+    auth: authReducer
+  },
   preloadedState: initialState
 });
 
