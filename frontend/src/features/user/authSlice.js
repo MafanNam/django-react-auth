@@ -84,6 +84,59 @@ export const {loginSuccess, loginFail, userLoadedSuccess, userLoadedFail} =
     authSlice.actions;
 
 
+export function load_user() {
+    return async function (dispatch, getState) {
+        if (localStorage.getItem('access')) {
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `JWT ${localStorage.getItem('access')}`,
+                    'Accept': 'application/json',
+                }
+            }
+
+            try {
+                const res = await axios.get(
+                    `${process.env.REACT_APP_API_URL}/auth/users/me/`, config)
+
+                dispatch({
+                    type: 'auth/userLoadedSuccess',
+                    payload: res.data
+                })
+            } catch (err) {
+                dispatch({
+                    type: 'auth/userLoadedFail'
+                })
+            }
+        } else {
+            dispatch({
+                type: 'auth/userLoadedFail'
+            })
+        }
+    }
+}
+
+export function googleAuthenticate(state, code) {
+    return async function(dispatch, getState) {
+        if(state && code && !localStorage.getItem('access')) {
+            const config = {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                }
+            }
+
+            const details = {
+                'state': state,
+                'code': code,
+            };
+
+            const formBody = Object.keys(details)
+                .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(details[key])).join('&');
+
+        }
+    }
+}
+
 export function checkAuthenticated() {
     return async function (dispatch, getState) {
         if (localStorage.getItem('access')) {
@@ -118,39 +171,6 @@ export function checkAuthenticated() {
         } else {
             dispatch({
                 type: 'auth/authenticatedFail'
-            })
-        }
-    }
-}
-
-
-export function load_user() {
-    return async function (dispatch, getState) {
-        if (localStorage.getItem('access')) {
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `JWT ${localStorage.getItem('access')}`,
-                    'Accept': 'application/json',
-                }
-            }
-
-            try {
-                const res = await axios.get(
-                    `${process.env.REACT_APP_API_URL}/auth/users/me/`, config)
-
-                dispatch({
-                    type: 'auth/userLoadedSuccess',
-                    payload: res.data
-                })
-            } catch (err) {
-                dispatch({
-                    type: 'auth/userLoadedFail'
-                })
-            }
-        } else {
-            dispatch({
-                type: 'auth/userLoadedFail'
             })
         }
     }
