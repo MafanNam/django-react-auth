@@ -1,5 +1,2 @@
 DJANGO_SECRET_KEY=django-insecure-%!d9c^7dh)&-8(g*t=l+jl=2ul)zkc=1zz)&b%45y&f803go2f
 DJANGO_DEBUG=True
-
-EMAIL_HOST_USER=
-EMAIL_HOST_PASSWORD=

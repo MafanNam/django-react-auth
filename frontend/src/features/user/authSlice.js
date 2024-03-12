@@ -28,6 +28,23 @@ const authSlice = createSlice({
             state.refresh = null;
             state.user = null;
         },
+        signupSuccess(state, action) {
+            state.isAuthenticated = false;
+        },
+        signupFail(state, action) {
+            localStorage.removeItem("access");
+            localStorage.removeItem("refresh");
+            state.isAuthenticated = false;
+            state.access = null;
+            state.refresh = null;
+            state.user = null
+        },
+        activationSuccess(state, action) {
+
+        },
+        activationFail(state, action) {
+
+        },
         userLoadedSuccess(state, action) {
             state.user = action.payload;
         },
@@ -47,6 +64,18 @@ const authSlice = createSlice({
             state.access = null;
             state.refresh = null;
             state.user = null
+        },
+        passwordResetSuccess(state, action) {
+
+        },
+        passwordResetFail(state, action) {
+
+        },
+        passwordResetConfirmSuccess(state, action) {
+
+        },
+        passwordResetConfirmFail(state, action) {
+
         },
     },
 });
@@ -155,6 +184,110 @@ export function login(email, password) {
         }
     }
 }
+
+
+export function signup(first_name, last_name, email, password, re_password) {
+    return async function (dispatch, getState) {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }
+
+        const body = JSON.stringify({first_name, last_name, email, password, re_password});
+        try {
+            const res = await axios.post(
+                `${process.env.REACT_APP_API_URL}/auth/users/`, body, config)
+
+            dispatch({
+                type: 'auth/signupSuccess',
+                payload: res.data
+            });
+        } catch (err) {
+            console.error(err)
+            dispatch({
+                type: 'auth/signupFail'
+            });
+        }
+    }
+}
+
+export function verify(uid, token) {
+    return async function (dispatch, getState) {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }
+
+        const body = JSON.stringify({uid, token});
+
+        try {
+            await axios.post(
+                `${process.env.REACT_APP_API_URL}/auth/users/activation/`, body, config)
+
+            dispatch({
+                type: 'auth/activationSuccess',
+            });
+        } catch (err) {
+            dispatch({
+                type: 'auth/activationFail'
+            });
+        }
+    }
+}
+
+
+export function reset_password(email) {
+    return async function (dispatch, getState) {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }
+
+        const body = JSON.stringify({email});
+
+        try {
+            await axios
+                .post(`${process.env.REACT_APP_API_URL}/auth/users/reset_password/`, body, config)
+
+            dispatch({
+                type: 'auth/passwordResetSuccess'
+            })
+        } catch (err) {
+            dispatch({
+                type: 'auth/passwordResetFail'
+            })
+        }
+    }
+}
+
+export function reset_password_confirm(uid, token, new_password, re_new_password) {
+    return async function (dispatch, getState) {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }
+
+        const body = JSON.stringify({uid, token, new_password, re_new_password});
+
+        try {
+            await axios
+                .post(`${process.env.REACT_APP_API_URL}/auth/users/reset_password_confirm/`, body, config)
+
+            dispatch({
+                type: 'auth/passwordResetConfirmSuccess'
+            })
+        } catch (err) {
+            dispatch({
+                type: 'auth/passwordResetConfirmFail'
+            })
+        }
+    }
+}
+
 
 export function logout() {
     return async function (dispatch, getState) {

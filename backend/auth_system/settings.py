@@ -1,4 +1,5 @@
 import os.path
+from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -13,7 +14,7 @@ APP_DIR = BASE_DIR / 'core_apps'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env(
     "DJANGO_SECRET_KEY",
-    default="oXPWQPA3C3sdBCuBeXUKq3LBp9YDJ33-306p9EAKf1ja1xkWnKY",
+    # default="oXPWQPA3C3sdBCuBeXUKq3LBp9YDJ33-306p9EAKf1ja1xkWnKY",
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -166,6 +167,8 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     'AUTH_HEADER_TYPES': ('JWT',),
 }
 

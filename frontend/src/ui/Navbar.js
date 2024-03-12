@@ -2,7 +2,6 @@ import React from 'react'
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {logout} from "../features/user/authSlice";
-import {retry} from "@reduxjs/toolkit/query";
 
 function Navbar() {
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);

@@ -21,8 +21,6 @@ function LoginForm() {
 
         dispatch(login(email, password))
 
-        console.log('test')
-
     };
 
     return (
