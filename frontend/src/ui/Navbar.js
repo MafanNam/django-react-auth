@@ -1,11 +1,17 @@
 import React from 'react'
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {logout} from "../features/user/authSlice";
 
 function Navbar() {
+    const navigate = useNavigate()
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
     const dispatch = useDispatch()
+
+    const logout_user = () => {
+        dispatch(logout());
+        navigate('/')
+    }
 
 
     const guestLinks = () => {
@@ -25,40 +31,38 @@ function Navbar() {
         return (
             <>
                 <li className="nav-item">
-                    <a className="nav-link" href="#!" onClick={logoutHandler}>Logout</a>
+                    <Link className="nav-link" to='/' onClick={logout_user}>Logout</Link>
                 </li>
             </>
         )
     }
 
-    const logoutHandler = () => {
-        dispatch(logout());
-    }
-
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <Link className="navbar-brand" to="/">Auth System</Link>
-            <button
-                className="navbar-toggler"
-                type="button"
-                data-toggle="collapse"
-                data-target="#navbarNav"
-                aria-controls="navbarNav"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-            >
-                <span className="navbar-toggler-icon"></span>
-            </button>
-            <div className="collapse navbar-collapse" id="navbarNav">
-                <ul className="navbar-nav">
-                    <li className="nav-item active">
-                        <Link className="nav-link" to="/">Home</Link>
-                    </li>
-                    {isAuthenticated ? authLinks() : guestLinks()}
+        <>
+            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                <Link className="navbar-brand" to="/">Auth System</Link>
+                <button
+                    className="navbar-toggler"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#navbarNav"
+                    aria-controls="navbarNav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                >
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+                <div className="collapse navbar-collapse" id="navbarNav">
+                    <ul className="navbar-nav">
+                        <li className="nav-item active">
+                            <Link className="nav-link" to="/">Home</Link>
+                        </li>
+                        {isAuthenticated ? authLinks() : guestLinks()}
 
-                </ul>
-            </div>
-        </nav>
+                    </ul>
+                </div>
+            </nav>
+        </>
     )
 }
 

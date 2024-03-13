@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {signup} from "../features/user/authSlice";
+import axios from "axios";
 
 function Signup() {
     const [accountCreated, setAccountCreated] = useState(false)
@@ -41,11 +42,20 @@ function Signup() {
         e.preventDefault()
 
         if (password === re_password) {
-            console.log(first_name, last_name, email, password, re_password)
             dispatch(signup(first_name, last_name, email, password, re_password))
             setAccountCreated(true);
         }
     };
+
+    async function continueWithGoogle() {
+        try {
+            const res = await axios
+                .get(`${process.env.REACT_APP_API_URL}/auth/o/google-oauth2/?redirect_uri=http://localhost:8000`)
+            window.location.replace(res.data.authorization_url);
+        } catch (err) {
+
+        }
+    }
 
     return (
         <div className='container mt-5'>
@@ -124,6 +134,11 @@ function Signup() {
                     Register
                 </button>
             </form>
+
+            <button className='btn btn-danger mt-3' onClick={continueWithGoogle}>
+                Continue With Google
+            </button>
+
             <p className='mt-3'>
                 Already have an account? <Link to='/login'>Sing In</Link>
             </p>

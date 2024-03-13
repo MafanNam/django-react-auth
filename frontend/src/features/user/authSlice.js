@@ -77,6 +77,21 @@ const authSlice = createSlice({
         passwordResetConfirmFail(state, action) {
 
         },
+        googleAuthSuccess(state, action) {
+            const {access, refresh} = action.payload;
+            localStorage.setItem('access', access)
+            state.isAuthenticated = true;
+            state.access = access;
+            state.refresh = refresh;
+        },
+        googleAuthFail(state, action) {
+            localStorage.removeItem("access");
+            localStorage.removeItem("refresh");
+            state.isAuthenticated = false;
+            state.access = null;
+            state.refresh = null;
+            state.user = null
+        },
     },
 });
 
@@ -117,8 +132,8 @@ export function load_user() {
 }
 
 export function googleAuthenticate(state, code) {
-    return async function(dispatch, getState) {
-        if(state && code && !localStorage.getItem('access')) {
+    return async function (dispatch, getState) {
+        if (state && code && !localStorage.getItem('access')) {
             const config = {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -132,6 +147,21 @@ export function googleAuthenticate(state, code) {
 
             const formBody = Object.keys(details)
                 .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(details[key])).join('&');
+
+            try {
+                const res = await axios
+                    .post(`${process.env.REACT_APP_API_URL}/auth/o/google-oauth2/?${formBody}`, config)
+
+                dispatch({
+                    type: 'auth/googleAuthSuccess',
+                    payload: res.data,
+                });
+                dispatch(load_user())
+            } catch (err) {
+                dispatch({
+                    type: 'auth/googleAuthFail',
+                });
+            }
 
         }
     }
