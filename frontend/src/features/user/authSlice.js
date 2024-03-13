@@ -80,11 +80,28 @@ const authSlice = createSlice({
         googleAuthSuccess(state, action) {
             const {access, refresh} = action.payload;
             localStorage.setItem('access', access)
+            localStorage.setItem("refresh", refresh);
             state.isAuthenticated = true;
             state.access = access;
             state.refresh = refresh;
         },
         googleAuthFail(state, action) {
+            localStorage.removeItem("access");
+            localStorage.removeItem("refresh");
+            state.isAuthenticated = false;
+            state.access = null;
+            state.refresh = null;
+            state.user = null
+        },
+        facebookAuthSuccess(state, action) {
+            const {access, refresh} = action.payload;
+            localStorage.setItem('access', access);
+            localStorage.setItem("refresh", refresh);
+            state.isAuthenticated = true;
+            state.access = access;
+            state.refresh = refresh;
+        },
+        facebookAuthFail(state, action) {
             localStorage.removeItem("access");
             localStorage.removeItem("refresh");
             state.isAuthenticated = false;
@@ -160,6 +177,42 @@ export function googleAuthenticate(state, code) {
             } catch (err) {
                 dispatch({
                     type: 'auth/googleAuthFail',
+                });
+            }
+
+        }
+    }
+}
+
+export function facebookAuthenticate(state, code) {
+    return async function (dispatch, getState) {
+        if (state && code && !localStorage.getItem('access')) {
+            const config = {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                }
+            }
+
+            const details = {
+                'state': state,
+                'code': code,
+            };
+
+            const formBody = Object.keys(details)
+                .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(details[key])).join('&');
+
+            try {
+                const res = await axios
+                    .post(`${process.env.REACT_APP_API_URL}/auth/o/facebook/?${formBody}`, config)
+
+                dispatch({
+                    type: 'auth/facebookAuthSuccess',
+                    payload: res.data,
+                });
+                dispatch(load_user())
+            } catch (err) {
+                dispatch({
+                    type: 'auth/facebookAuthFail',
                 });
             }
 

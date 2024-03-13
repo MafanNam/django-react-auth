@@ -7,6 +7,8 @@ import ResetPasswordConfirm from "./pages/ResetPasswordConfirm";
 import ResetPassword from "./pages/ResetPassword";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
+import Facebook from "./ui/Facebook";
+import Google from "./ui/Google";
 
 function App() {
     return (
@@ -16,6 +18,8 @@ function App() {
                     <Route index element={<Home/>}/>
                     <Route path="login" element={<Login/>}/>
                     <Route path="signup" element={<Signup/>}/>
+                    <Route path="facebook" element={<Facebook/>}/>
+                    <Route path="google" element={<Google/>}/>
                     <Route path="reset-password" element={<ResetPassword/>}/>
                     <Route path="password/reset/confirm/:uid/:token" element={<ResetPasswordConfirm/>}/>
                     <Route path="activate/:uid/:token" element={<Activate/>}/>

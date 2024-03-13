@@ -21,7 +21,17 @@ function Login() {
     async function continueWithGoogle() {
         try {
             const res = await axios
-                .get(`${process.env.REACT_APP_API_URL}/auth/o/google-oauth2/?redirect_uri=http://localhost:8000`)
+                .get(`${process.env.REACT_APP_API_URL}/auth/o/google-oauth2/?redirect_uri=${process.env.REACT_APP_API_BASE_URL}/google`)
+            window.location.replace(res.data.authorization_url);
+        } catch (err) {
+
+        }
+    }
+
+    async function continueWithFacebook() {
+        try {
+            const res = await axios
+                .get(`${process.env.REACT_APP_API_URL}/auth/o/facebook/?redirect_uri=${process.env.REACT_APP_API_BASE_URL}/facebook`)
             window.location.replace(res.data.authorization_url);
         } catch (err) {
 
@@ -37,6 +47,10 @@ function Login() {
 
             <button className='btn btn-danger mt-3' onClick={continueWithGoogle}>
                 Continue With Google
+            </button>
+            <br/>
+            <button className='btn btn-primary mt-3' onClick={continueWithFacebook}>
+                Continue With Facebook
             </button>
 
             <p className='mt-3'>
